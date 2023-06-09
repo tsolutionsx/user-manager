@@ -15,17 +15,19 @@ var AppConfig *Config
 
 func LoadAppConfig() {
 	log.Println("Loading Server Configurations...")
+	if err := initViper(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := viper.Unmarshal(&AppConfig); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func initViper() error {
 	viper.AddConfigPath(".")
 	viper.SetConfigName("config")
 	viper.SetConfigType("json")
-	err := viper.ReadInConfig()
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = viper.Unmarshal(&AppConfig)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return viper.ReadInConfig()
 }

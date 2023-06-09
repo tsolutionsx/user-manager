@@ -1,7 +1,8 @@
 package middlewares
 
 import (
-	"authentication/auth"
+	"ewc-backend-go/auth"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,15 +11,12 @@ func Auth() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		tokenString := context.GetHeader("Authorization")
 		if tokenString == "" {
-			context.JSON(401, gin.H{"error": "request does not contain an access token"})
-			context.Abort()
+			context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "request does not contain an access token"})
 			return
 		}
 
-		err := auth.ValidateToken(tokenString)
-		if err != nil {
-			context.JSON(401, gin.H{"error": err.Error()})
-			context.Abort()
+		if err := auth.ValidateToken(tokenString); err != nil {
+			context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return
 		}
 

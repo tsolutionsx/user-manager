@@ -1,11 +1,10 @@
 package main
 
 import (
-	"authentication/controllers"
-	"authentication/database"
-	"authentication/middlewares"
+	"ewc-backend-go/controllers"
+	"ewc-backend-go/database"
+	"ewc-backend-go/middlewares"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +22,6 @@ func main() {
 
 func initRouter() *gin.Engine {
 	router := gin.Default()
-	router.Use(cors.Default())
 	api := router.Group("/api")
 	{
 		api.POST("/token", controllers.GenerateToken)
@@ -31,6 +29,10 @@ func initRouter() *gin.Engine {
 		secured := api.Group("/secured").Use(middlewares.Auth())
 		{
 			secured.GET("/ping", controllers.Ping)
+			secured.GET("/users", controllers.GetUsers)
+			secured.GET("/users/:id", controllers.GetUserById)
+			secured.PUT("users/:id", controllers.UpdateUser)
+			secured.DELETE("users/:id", controllers.DeleteUser)
 		}
 	}
 

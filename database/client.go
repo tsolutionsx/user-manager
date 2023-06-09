@@ -1,7 +1,7 @@
 package database
 
 import (
-	"authentication/models"
+	"ewc-backend-go/models"
 	"log"
 
 	"gorm.io/driver/mysql"
